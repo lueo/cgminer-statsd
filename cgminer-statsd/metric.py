@@ -33,7 +33,7 @@ while True:
                 c.gauge('fan_per', g['Fan Percent'])
                 c.gauge('fan_spd', g['Fan Speed'])
                 c.gauge('reject', g['Rejected'])
-                print "Success!"
+                
         except IOError:
             pass
     time.sleep(5)
