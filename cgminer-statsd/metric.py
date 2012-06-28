@@ -11,6 +11,19 @@ names = ['sakadagamin', 'anagamin']
 stats_server = { 'host': '192.168.1.102',
                  'port': 8125 }
 
+mapping = {'Temperature': 'temp',
+           'GPU Clock': 'engine',
+           'Memory Clock': 'mem',
+           'MHS 5s': 'mhs_5s',
+           'MHS av': 'mhs_av',
+           'Utility': 'util',
+           'Accepted': 'accept',
+           'Rejected': 'reject',
+           'GPU Activity': 'activity',
+           'Fan Speed': 'fan_spd',
+           'Fan Percent': 'fan_per',
+           }
+
 metrices = []
 
 while True:
@@ -22,18 +35,9 @@ while True:
                 c = StatsClient(stats_server['host'],
                                 stats_server['port'],
                                 prefix='%s.gpu.%d' % (name, no))
-                c.gauge('temp', g['Temperature'])
-                c.gauge('engine', g['GPU Clock'])
-                c.gauge('mem', g['Memory Clock'])
-                c.gauge('mhs_5s', g['MHS 5s'])
-                c.gauge('mhs_av', g['MHS av'])
-                c.gauge('util', g['Utility'])
-                c.gauge('accept', g['Accepted'])
-                c.gauge('activity', g['GPU Activity'])
-                c.gauge('fan_per', g['Fan Percent'])
-                c.gauge('fan_spd', g['Fan Speed'])
-                c.gauge('reject', g['Rejected'])
-                
+                for k, v in mapping.items():
+                    c.gauge(v, g[k])
+                    print name, no, v, g[k]
         except IOError:
             pass
     time.sleep(5)
