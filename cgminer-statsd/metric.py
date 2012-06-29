@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from cgminer import api
-from statsd import StatsClient
 import socket
 import time
 
@@ -34,7 +33,6 @@ while True:
         name = names[index]
         skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         skt.connect((stats_server['host'], stats_server['port']))
-        metrics = ''
         try:
             ret = mach.call('devs')
             for g in ret['DEVS']:
@@ -43,9 +41,8 @@ while True:
                 prefix = 'test.%s.gpu.%d' % (name, no)
                 for k, v in mapping.items():
                     metric = "%s.%s %s %s\n" % (prefix, v, g[k], timestamp)
-                    metrics = metrics + metric
-            print metrics
-            skt.sendall(metrics)
+                    print metric
+                    skt.sendall(metric)
         except IOError, socket.error:
             pass
         skt.close()
